@@ -10,7 +10,6 @@ int motorForward1Pin = 12;
 int motorReverse1Pin = 13;
 int motorForward2Pin = 9;
 int motorReverse2Pin = 10;
-
  
 void setup() { 
   // initialize serial communication @ 9600 baud: 
@@ -42,6 +41,12 @@ long readDistance(){
   return distance; 
 }
 
+void fan(){
+  digitalWrite(TIP120pin,HIGH);
+  delay(2500);
+  digitalWrite(TIP120pin,LOW);
+}
+
 void go(){
   digitalWrite(sleepPin, HIGH); 
   digitalWrite(motorForward1Pin, HIGH);
@@ -57,7 +62,7 @@ void reverse(){
   digitalWrite(motorReverse1Pin, HIGH);
   digitalWrite(motorForward2Pin, LOW); 
   digitalWrite(motorReverse2Pin, HIGH);
-  delay(2000);
+  delay(1000);
   }
 void stop(){
   digitalWrite(sleepPin, HIGH); 
@@ -67,14 +72,13 @@ void stop(){
   digitalWrite(motorReverse2Pin, LOW);
 }
 
-
 void rightwheel(){
   digitalWrite(sleepPin, HIGH); 
   digitalWrite(motorForward1Pin, HIGH); 
   digitalWrite(motorReverse1Pin, LOW);
   digitalWrite(motorForward2Pin, LOW); 
   digitalWrite(motorReverse2Pin, LOW);
-  delay(2000);
+  delay(1000);
 
   digitalWrite(motorForward1Pin, LOW); 
   digitalWrite(motorReverse1Pin, LOW);
@@ -88,47 +92,19 @@ void leftwheel(){
  digitalWrite(motorReverse1Pin, LOW);
  digitalWrite(motorForward2Pin, HIGH); 
  digitalWrite(motorReverse2Pin, LOW);
- delay(1000);
+ delay(500);
 
  digitalWrite(motorForward1Pin, LOW); 
  digitalWrite(motorReverse1Pin, LOW);
  digitalWrite(motorForward2Pin, LOW); 
  digitalWrite(motorReverse2Pin, LOW);
  delay(1000);
- }
-
-
- 
-
-   
-  
+ }  
  
 void loop() { 
   int digiSensorReading = digitalRead(6);  
-  int range = map(digiSensorReading, sensorMin, sensorMax, 0, 3);
-    Serial.println(digiSensorReading );
-    if(digiSensorReading){
-      analogWrite(TIP120pin, 255); 
-    }else if(!digiSensorReading){
-      analogWrite(TIP120pin, 0);  
-    }
-
-    readDistance();
-   if (distance >  25){
+  readDistance();
+  if (distance >  25){
     go();
-   }else if(distance <= 25){
-    stop();
-    delay(1000);
-    leftwheel();
-    delay(500);
-    readDistance();
-   }
-   if (distance <= 25) {
-    rightwheel();
-    delay(500);
-    readDistance();
-   }
-   if (distance <= 25){
-    reverse();
-   }
-}
+   } else if (distance <= 25 and digiSensorReading){
+     fan();
