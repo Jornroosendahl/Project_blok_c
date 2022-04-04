@@ -107,4 +107,24 @@ void loop() {
   if (distance >  25){
     go();
    } else if (distance <= 25 and digiSensorReading){
+    stop();
      fan();
+     delay(1000);
+   }
+   
+   else if(distance <= 25){
+    stop();
+    delay(1000);
+    leftwheel();
+    delay(500);
+    readDistance();
+   }
+   if (distance <= 25) {
+    rightwheel();
+    delay(500);
+    readDistance();
+   }
+   if (distance <= 25){
+    reverse();
+   }
+}
