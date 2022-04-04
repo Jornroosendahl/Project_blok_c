@@ -74,6 +74,13 @@ void stop(){
 
 void rightwheel(){
   digitalWrite(sleepPin, HIGH); 
+  // eerst klein stukje achteruit
+  digitalWrite(motorForward1Pin, LOW);
+  digitalWrite(motorReverse1Pin,HIGH);
+  digitalWrite(motorForward2Pin,LOW);
+  digitalWrite(motorReverse2Pin,HIGH);
+  delay(500);
+  
   digitalWrite(motorForward1Pin, HIGH); 
   digitalWrite(motorReverse1Pin, LOW);
   digitalWrite(motorForward2Pin, LOW); 
@@ -88,6 +95,13 @@ void rightwheel(){
   }
 void leftwheel(){
  digitalWrite(sleepPin, HIGH); 
+   // eerst klein stukje achteruit
+  digitalWrite(motorForward1Pin, LOW);
+  digitalWrite(motorReverse1Pin,HIGH);
+  digitalWrite(motorForward2Pin,LOW);
+  digitalWrite(motorReverse2Pin,HIGH);
+  delay(500);
+  
  digitalWrite(motorForward1Pin, LOW); 
  digitalWrite(motorReverse1Pin, LOW);
  digitalWrite(motorForward2Pin, HIGH); 
