@@ -63,26 +63,15 @@ void fanLeds(){
 }
 
 void slowLeds() {
-  leds[0] = CRGB(255,0,0);
-    leds[1] = CRGB(0,255,0);
-    leds[2] = CRGB(0,255,0);
-    leds[3] = CRGB(0,0,255);
-    leds[4] = CRGB(255,255,0);
-    leds[5] = CRGB(255,255,0);
-    leds[6] = CRGB(255,255,0);
-    leds[7] = CRGB(255,255,0);
-    FastLED.show();
-    delay(1000);
-    leds[0] = CRGB(0,255,0);
+  leds[0] = CRGB(0,0,255);
     leds[1] = CRGB(0,0,255);
-    leds[2] = CRGB(255,0,0);
-    leds[3] = CRGB(0,255,0);
-    leds[4] = CRGB(0,255,0);
-    leds[5] = CRGB(255,0,0);
-    leds[6] = CRGB(0,255,0);
-    leds[7] = CRGB(255,0,0);
-    FastLED.show();
-    delay(1000);
+    leds[2] = CRGB(0,0,255);
+    leds[3] = CRGB(0,0,255);
+    leds[4] = CRGB(0,0,255);
+    leds[5] = CRGB(0,0,255);
+    leds[6] = CRGB(0,0,255);
+    leds[7] = CRGB(0,0,255);
+    FastLED.show();    
 }
 
 long readDistance(){
@@ -195,27 +184,27 @@ void leftwheel(){
 void loop() { 
   int digiSensorReading = digitalRead(6);  
   readDistance();
-  if (distance >  25){
+  if (distance >  15){
     go();
-   } else if (distance <= 25 and digiSensorReading){
+   } else if (distance <= 10 and digiSensorReading){
     stop();
      fan();
      delay(1000);
    }
    
-   else if(distance <= 25){
+   else if(distance <= 15){
     stop();
     delay(1000);
     leftwheel();
     delay(500);
     readDistance();
    }
-   if (distance <= 25) {
+   if (distance <= 15) {
     rightwheel();
     delay(500);
     readDistance();
    }
-   if (distance <= 25){
+   if (distance <= 15){
     reverse();
    }
 }
