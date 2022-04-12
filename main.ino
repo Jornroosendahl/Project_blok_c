@@ -1,9 +1,12 @@
-#include <FastLED.h> 
+// library importeren
+#include <FastLED.h>
 
+//pins voor de ledstrip defineren
 #define NUM_LEDS 8
 #define DATA_PIN 4
 #define CLOCK_PIN 5
 
+//pins aanwijzen en variabelen maken
 int TIP120pin = 11; //TIP120pin connected to pin 11 of the Arduino 
 const int sensorMin = 0;     // sensor minimum 
 const int sensorMax = 1024;  // sensor maximum
@@ -20,10 +23,15 @@ int toeter = 3;
 CRGB leds[NUM_LEDS];
 
 
+
+
+
 void setup() { 
   // initialize serial communication @ 9600 baud: 
   Serial.begin(9600);
   LEDS.addLeds<APA102,DATA_PIN, CLOCK_PIN,RGB>(leds,NUM_LEDS);
+  
+  // de verschillende pins als output zettten
   pinMode(TIP120pin, OUTPUT); // Set pin for output to control TIP120 Base pin
   pinMode(sleepPin, OUTPUT);
   pinMode(toeter, OUTPUT);
@@ -40,6 +48,7 @@ void setup() {
 
 
 void fanLeds(){
+  // functie om de ledstrip te laten knipperen als de auto bij de vlam staat
     leds[0] = CRGB(255,0,0);
     leds[1] = CRGB(0,255,0);
     leds[2] = CRGB(0,255,0);
@@ -63,6 +72,7 @@ void fanLeds(){
 }
 
 void slowLeds() {
+  // functie om de leds 1 kleur (rood) te laten branden terwijl de auto rijdt
   leds[0] = CRGB(0,0,255);
     leds[1] = CRGB(0,0,255);
     leds[2] = CRGB(0,0,255);
@@ -75,6 +85,8 @@ void slowLeds() {
 }
 
 long readDistance(){
+  // functie om de afstand te meten en in de serial monitor te printen
+  // Afstand wordt opgeslagen in variabele distance
   digitalWrite(trigPin, LOW); 
   delayMicroseconds(2); 
   digitalWrite(trigPin, HIGH); 
@@ -89,6 +101,7 @@ long readDistance(){
 }
 
 void fan(){
+  // functie om de fan te laten draaien en ledjes meerdere keren te laten knipperen en een kort piepsignaal te laten horen
   digitalWrite(toeter,HIGH);
     delay(50);
     digitalWrite(toeter,LOW);
@@ -108,11 +121,13 @@ void fan(){
   fanLeds();
   fanLeds();
   digitalWrite(TIP120pin,HIGH);
+  Serial.print("AAAAAAAAAAAAAAAANNNNNN");
   delay(2500);
   digitalWrite(TIP120pin,LOW);
 }
 
 void go(){
+  // functie om de auto vooruit te laten rijden
   digitalWrite(sleepPin, HIGH); 
   digitalWrite(motorForward1Pin, HIGH);
   digitalWrite(motorReverse1Pin, LOW);
@@ -123,6 +138,7 @@ void go(){
   }
 
 void reverse(){
+  // functie om de auto achteruit te laten rijden
   digitalWrite(sleepPin, HIGH); 
   digitalWrite(motorForward1Pin, LOW);
   digitalWrite(motorReverse1Pin, HIGH);
@@ -131,6 +147,7 @@ void reverse(){
   delay(1000);
   }
 void stop(){
+  // functie om de auto te laten stoppen
   digitalWrite(sleepPin, HIGH); 
   digitalWrite(motorForward1Pin, LOW);
   digitalWrite(motorReverse1Pin, LOW);
@@ -139,6 +156,8 @@ void stop(){
 }
 
 void rightwheel(){
+  // functe om de auto een stukje achteruit te laten rijden en vervolgens het rechterwiel te laten draaien
+  int digiSensorReading = digitalRead(6);
   digitalWrite(sleepPin, HIGH); 
   // eerst klein stukje achteruit
   digitalWrite(motorForward1Pin, LOW);
@@ -152,6 +171,7 @@ void rightwheel(){
   digitalWrite(motorForward2Pin, LOW); 
   digitalWrite(motorReverse2Pin, LOW);
   delay(1000);
+ 
 
   digitalWrite(motorForward1Pin, LOW); 
   digitalWrite(motorReverse1Pin, LOW);
@@ -160,6 +180,8 @@ void rightwheel(){
   delay(1000);
   }
 void leftwheel(){
+  // functie om de auto eerst een stukje achteruit te laten rijden, om vervolgens het linkerwiel te laten draaien
+  int digiSensorReading = digitalRead(6);
  digitalWrite(sleepPin, HIGH); 
    // eerst klein stukje achteruit
   digitalWrite(motorForward1Pin, LOW);
@@ -180,13 +202,18 @@ void leftwheel(){
  digitalWrite(motorReverse2Pin, LOW);
  delay(1000);
  }  
- 
-void loop() { 
+
+
+
+void loop() {
+  // de main loop waar alle functies worden aangeroepen
+  delay(100); 
   int digiSensorReading = digitalRead(6);  
   readDistance();
   if (distance >  15){
     go();
-   } else if (distance <= 10 and digiSensorReading){
+   } else if (distance <= 15 and digiSensorReading){
+    Serial.print(digiSensorReading);
     stop();
      fan();
      delay(1000);
@@ -199,10 +226,16 @@ void loop() {
     delay(500);
     readDistance();
    }
+   if (distance <= 15 and digiSensorReading){
+    return;
+   }
    if (distance <= 15) {
     rightwheel();
     delay(500);
     readDistance();
+   }
+   if (distance <= 15 and digiSensorReading){
+    return;
    }
    if (distance <= 15){
     reverse();
