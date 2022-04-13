@@ -1,5 +1,6 @@
 // library importeren
 #include <FastLED.h>
+#include <arduino-timer.h>
 
 //pins voor de ledstrip defineren
 #define NUM_LEDS 8
@@ -7,6 +8,7 @@
 #define CLOCK_PIN 5
 
 //pins aanwijzen en variabelen maken
+auto timer = timer_create_default(); // create timer with default settings
 int TIP120pin = 11; //TIP120pin connected to pin 11 of the Arduino 
 const int sensorMin = 0;     // sensor minimum 
 const int sensorMax = 1024;  // sensor maximum
@@ -134,7 +136,6 @@ void go(){
   digitalWrite(motorForward2Pin, HIGH); 
   digitalWrite(motorReverse2Pin, LOW);
   slowLeds();
-  delay(6);
   }
 
 void reverse(){
@@ -164,13 +165,31 @@ void rightwheel(){
   digitalWrite(motorReverse1Pin,HIGH);
   digitalWrite(motorForward2Pin,LOW);
   digitalWrite(motorReverse2Pin,HIGH);
-  delay(500);
-  
-  digitalWrite(motorForward1Pin, HIGH); 
-  digitalWrite(motorReverse1Pin, LOW);
-  digitalWrite(motorForward2Pin, LOW); 
-  digitalWrite(motorReverse2Pin, LOW);
   delay(1000);
+
+
+  
+   for(int i = 0; i < 10; i++){
+ digitalWrite(motorForward1Pin, HIGH); 
+ digitalWrite(motorReverse1Pin, LOW);
+ digitalWrite(motorForward2Pin, LOW); 
+ digitalWrite(motorReverse2Pin, LOW);
+ delay(100);
+ digitalWrite(motorForward1Pin, LOW); 
+ digitalWrite(motorReverse1Pin, LOW);
+ digitalWrite(motorForward2Pin, LOW); 
+ digitalWrite(motorReverse2Pin, LOW);
+ delay(300);
+ if(digitalRead(6) == 1){
+
+ break;
+ }else{
+  continue;
+  }
+ }
+
+
+
  
 
   digitalWrite(motorForward1Pin, LOW); 
@@ -188,13 +207,29 @@ void leftwheel(){
   digitalWrite(motorReverse1Pin,HIGH);
   digitalWrite(motorForward2Pin,LOW);
   digitalWrite(motorReverse2Pin,HIGH);
-  delay(500);
-  
+  delay(800);
+
+
+ for(int i = 0; i < 5; i++){
  digitalWrite(motorForward1Pin, LOW); 
  digitalWrite(motorReverse1Pin, LOW);
  digitalWrite(motorForward2Pin, HIGH); 
  digitalWrite(motorReverse2Pin, LOW);
- delay(500);
+ delay(100);
+ digitalWrite(motorForward1Pin, LOW); 
+ digitalWrite(motorReverse1Pin, LOW);
+ digitalWrite(motorForward2Pin, LOW); 
+ digitalWrite(motorReverse2Pin, LOW);
+ delay(300);
+ if(digitalRead(6) == 1){
+
+ break;
+ }else{
+  continue;
+  }
+ }
+
+
 
  digitalWrite(motorForward1Pin, LOW); 
  digitalWrite(motorReverse1Pin, LOW);
@@ -206,11 +241,10 @@ void leftwheel(){
 
 
 void loop() {
-  // de main loop waar alle functies worden aangeroepen
-  delay(100); 
+  // de main loop waar alle functies worden aangeroepen 
   int digiSensorReading = digitalRead(6);  
   readDistance();
-  if (distance >  15){
+  if (distance >  20){
     go();
    } else if (distance <= 15 and digiSensorReading){
     Serial.print(digiSensorReading);
@@ -219,25 +253,25 @@ void loop() {
      delay(1000);
    }
    
-   else if(distance <= 15){
+   else if(distance <= 20){
     stop();
     delay(1000);
     leftwheel();
     delay(500);
     readDistance();
    }
-   if (distance <= 15 and digiSensorReading){
+   if (distance <= 20 and digiSensorReading){
     return;
    }
-   if (distance <= 15) {
+   if (distance <= 20) {
     rightwheel();
     delay(500);
     readDistance();
    }
-   if (distance <= 15 and digiSensorReading){
+   if (distance <= 20 and digiSensorReading){
     return;
    }
-   if (distance <= 15){
+   if (distance <= 20){
     reverse();
    }
 }
